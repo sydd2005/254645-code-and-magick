@@ -1,3 +1,5 @@
+'use strict';
+
 var drawCustomShape = function (ctx, fillStyle, topLeftX, topLeftY, width, height) {
   ctx.fillStyle = fillStyle;
   ctx.beginPath();
@@ -10,7 +12,7 @@ var drawCustomShape = function (ctx, fillStyle, topLeftX, topLeftY, width, heigh
   ctx.arcTo(topLeftX, topLeftY + height, topLeftX, topLeftY + height - 10, Math.SQRT2 * 10);
   ctx.closePath();
   ctx.fill();
-}
+};
 
 var drawCloud = function (ctx) {
   var topLeftX = 100;
@@ -20,7 +22,7 @@ var drawCloud = function (ctx) {
 
   drawCustomShape(ctx, 'rgba(0, 0, 0, 0.7)', topLeftX + 10, topLeftY + 10, width, height);
   drawCustomShape(ctx, '#ffffff', topLeftX, topLeftY, width, height);
-}
+};
 
 var drawTitle = function (ctx, title) {
   var lineStartX = 130;
@@ -34,7 +36,7 @@ var drawTitle = function (ctx, title) {
   for (var i = 0; i < lines.length; i++) {
     ctx.fillText(lines[i], lineStartX, lineStartY + i * lineHeight);
   }
-}
+};
 
 var drawBar = function (ctx, name, time, bottomLeftX, bottomLeftY, barStep, barWidth, barColor, lineHeight) {
   ctx.fillStyle = '#000000';
@@ -46,7 +48,7 @@ var drawBar = function (ctx, name, time, bottomLeftX, bottomLeftY, barStep, barW
 
   ctx.fillStyle = '#000000';
   ctx.fillText(Math.round(time), bottomLeftX, bottomLeftY - barHeight - lineHeight * 1.5);
-}
+};
 
 window.renderStatistics = function (ctx, names, times) {
   var histogramHeight = 150;
@@ -60,7 +62,7 @@ window.renderStatistics = function (ctx, names, times) {
   drawCloud(ctx);
   drawTitle(ctx, 'Ура вы победили!\nСписок результатов:');
 
-  for(var i = 0; i < times.length; i++) {
+  for (var i = 0; i < times.length; i++) {
     maxTime = maxTime > times[i] ? maxTime : times[i];
   }
 
@@ -70,4 +72,4 @@ window.renderStatistics = function (ctx, names, times) {
     barColor = names[j] === 'Вы' ? 'rgba(255, 0, 0, 1)' : 'rgba(0, 0, 255, ' + (0.2 + 0.8 * Math.random()) + ')';
     drawBar(ctx, names[j], times[j], firstBarX + j * (barWidth + barGap), histogramBottomY, barStep, barWidth, barColor, lineHeight);
   }
-}
+};
