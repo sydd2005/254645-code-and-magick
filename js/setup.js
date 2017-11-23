@@ -39,14 +39,11 @@ var EYES_COLORS = [
   'green',
 ];
 
-var setupModal = document.querySelector('.setup');
-if (setupModal) {
-  setupModal.classList.remove('hidden');
-}
+var SIMILAR_WIZARDS_COUNT = 4;
 
 var similarWizardTemplate = document.querySelector('#similar-wizard-template');
 if (similarWizardTemplate) {
-  similarWizardTemplate = similarWizardTemplate.content.querySelector('.setup-similar-item');
+  var setupSimilarItemTemplate = similarWizardTemplate.content.querySelector('.setup-similar-item');
 }
 
 var generateSimilarWizards = function (wizardsCount) {
@@ -88,20 +85,29 @@ var createSimilarWizardsFragment = function (wizards) {
   var wizardsFragment = document.createDocumentFragment();
 
   for (var i = 0; i < wizards.length; i++) {
-    wizardsFragment.appendChild(createWizardElement(wizards[i], similarWizardTemplate));
+    wizardsFragment.appendChild(createWizardElement(wizards[i], setupSimilarItemTemplate));
   }
 
   return wizardsFragment;
 };
 
-var similarListElement = setupModal.querySelector('.setup-similar-list');
-if (similarListElement) {
-  var similarWizards = generateSimilarWizards(4);
-  var similarWizardsFragment = createSimilarWizardsFragment(similarWizards);
-  similarListElement.appendChild(similarWizardsFragment);
-}
+var showSetupModal = function () {
+  var setupModal = document.querySelector('.setup');
+  if (setupModal) {
+    var similarListElement = setupModal.querySelector('.setup-similar-list');
+    if (similarListElement) {
+      var similarWizards = generateSimilarWizards(SIMILAR_WIZARDS_COUNT);
+      var similarWizardsFragment = createSimilarWizardsFragment(similarWizards);
+      similarListElement.appendChild(similarWizardsFragment);
+    }
 
-var setupSimilarSection = setupModal.querySelector('.setup-similar');
-if (setupSimilarSection) {
-  setupSimilarSection.classList.remove('hidden');
-}
+    var setupSimilarSection = setupModal.querySelector('.setup-similar');
+    if (setupSimilarSection) {
+      setupSimilarSection.classList.remove('hidden');
+    }
+
+    setupModal.classList.remove('hidden');
+  }
+};
+
+showSetupModal();
