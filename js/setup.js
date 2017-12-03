@@ -148,7 +148,9 @@ if (setupModal) {
       var currentColor = targetStyle[styleProperty];
       do {
         var newColor = colorArray[generateRandomIndex(colorArray.length)];
-      } while (newColor === currentColor);
+        var rgbColoredElement = document.createElement('div');
+        rgbColoredElement.style.backgroundColor = newColor;
+      } while (rgbColoredElement.style.backgroundColor === currentColor);
       targetStyle[styleProperty] = newColor;
       var correspondingInput = setupModal.querySelector('input[name=' + inputName + ']');
       if (correspondingInput) {
@@ -157,33 +159,32 @@ if (setupModal) {
     };
   };
 
-  var wizardCoatElement = setupModal.querySelector('.setup-wizard .wizard-coat');
-  if (wizardCoatElement) {
-    var wizardCoatElementClickHandler = generateChangeColorListener('coat-color', COAT_COLORS, 'fill');
-  }
+  var wizardCoatElementClickHandler = generateChangeColorListener('coat-color', COAT_COLORS, 'fill');
+  var wizardEyesElementClickHandler = generateChangeColorListener('eyes-color', EYES_COLORS, 'fill');
+  var fireballElementClickHandler = generateChangeColorListener('fireball-color', FIREBALL_COLORS, 'backgroundColor');
 
-  var wizardEyesElement = setupModal.querySelector('.setup-wizard .wizard-eyes');
-  if (wizardEyesElement) {
-    var wizardEyesElementClickHandler = generateChangeColorListener('eyes-color', EYES_COLORS, 'fill');
-  }
+  var changeModalEventListeners = function (shouldBeAdded) {
+    var wizardCoatElement = setupModal.querySelector('.setup-wizard .wizard-coat');
+    var wizardEyesElement = setupModal.querySelector('.setup-wizard .wizard-eyes');
+    var fireballElement = setupModal.querySelector('.setup-fireball-wrap');
 
-  var fireballElement = setupModal.querySelector('.setup-fireball-wrap');
-  if (fireballElement) {
-    var fireballElementClickHandler = generateChangeColorListener('fireball-color', FIREBALL_COLORS, 'background-color');
-  }
+    var modifyEventListenerMethod = shouldBeAdded ? 'addEventListener' : 'removeEventListener';
+
+    document[modifyEventListenerMethod]('keydown', modalEscPressListener);
+    if (wizardCoatElement) {
+      wizardCoatElement[modifyEventListenerMethod]('click', wizardCoatElementClickHandler);
+    }
+    if (wizardEyesElement) {
+      wizardEyesElement[modifyEventListenerMethod]('click', wizardEyesElementClickHandler);
+    }
+    if (fireballElement) {
+      fireballElement[modifyEventListenerMethod]('click', fireballElementClickHandler);
+    }
+  };
 
   var closeSetupModal = function () {
     setupModal.classList.add('hidden');
-    document.removeEventListener('keydown', modalEscPressListener);
-    if (wizardCoatElement) {
-      wizardCoatElement.removeEventListener('click', wizardCoatElementClickHandler);
-    }
-    if (wizardEyesElement) {
-      wizardEyesElement.removeEventListener('click', wizardEyesElementClickHandler);
-    }
-    if (fireballElement) {
-      fireballElement.removeEventListener('click', fireballElementClickHandler);
-    }
+    changeModalEventListeners(false);
   };
 
   var modalEscPressListener = generateKeyEventListener(ESC_KEYCODE, closeSetupModal);
@@ -201,18 +202,8 @@ if (setupModal) {
       setupSimilarSection.classList.remove('hidden');
     }
 
-    document.addEventListener('keydown', modalEscPressListener);
     setupModal.classList.remove('hidden');
-
-    if (wizardCoatElement) {
-      wizardCoatElement.addEventListener('click', wizardCoatElementClickHandler);
-    }
-    if (wizardEyesElement) {
-      wizardEyesElement.addEventListener('click', wizardEyesElementClickHandler);
-    }
-    if (fireballElement) {
-      fireballElement.addEventListener('click', fireballElementClickHandler);
-    }
+    changeModalEventListeners(true);
   };
 
   setupOpenButton.addEventListener('click', showSetupModal);
